@@ -9,7 +9,7 @@ const dbConfig: PoolOptions = {
   port: parseInt(process.env.DB_PORT || '41495'),
   user: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'moneytraker_db',
+  database: process.env.DB_NAME || 'moneytracker_db',
   ssl: {
     rejectUnauthorized: false
   },
