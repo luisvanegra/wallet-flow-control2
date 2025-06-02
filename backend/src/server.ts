@@ -33,8 +33,8 @@ app.use(cors({
   origin: [
     process.env.FRONTEND_URL || 'http://localhost:5173',
     'http://localhost:8080',
-    'https://wallet-flow-control.vercel.app',
-    'https://wallet-flow-control-production.up.railway.app',
+    'https://wallet-flow-control2.vercel.app',
+    'https://wallet-flow-control2-production.up.railway.app',
     'http://localhost:32100/'
   ],
   credentials: true,
