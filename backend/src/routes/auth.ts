@@ -143,6 +143,12 @@ router.post('/login', async (req, res) => {
       { expiresIn: '7d' }
     );
 
+    // Configurar headers de respuesta
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Origin', 'https://wallet-flow-control2.vercel.app');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
     return res.json({
       success: true,
       message: 'Login exitoso',
