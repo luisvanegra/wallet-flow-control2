@@ -1,10 +1,10 @@
-import mysql from 'mysql2/promise';
+import mysql, { PoolOptions, QueryError } from 'mysql2/promise';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
 // Configuración de la conexión a MySQL Railway
-const dbConfig = {
+const dbConfig: PoolOptions = {
   host: process.env.DB_HOST || 'yamanote.proxy.rlwy.net',
   port: parseInt(process.env.DB_PORT || '41495'),
   user: process.env.DB_USER || 'root',
@@ -37,13 +37,14 @@ export const connectDatabase = async () => {
     console.log('📊 Base de datos respondiendo correctamente');
     
   } catch (error) {
-    console.error('❌ Error conectando a la base de datos:', error);
+    const dbError = error as QueryError;
+    console.error('❌ Error conectando a la base de datos:', dbError);
     console.error('🔍 Detalles del error:', {
-      code: error.code,
-      errno: error.errno,
-      sqlMessage: error.sqlMessage
+      code: dbError.code,
+      errno: dbError.errno,
+      sqlMessage: dbError.sqlMessage
     });
-    throw error;
+    throw dbError;
   }
 };
 
