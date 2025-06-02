@@ -26,21 +26,31 @@ const PORT = process.env.PORT || 3001;
 connectDatabase();
 
 // Middleware de seguridad
-app.use(helmet());
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+  crossOriginOpenerPolicy: { policy: "unsafe-none" }
+}));
 
-// CORS
-app.use(cors({
+// Configuración de CORS
+const corsOptions = {
   origin: [
-    process.env.FRONTEND_URL || 'http://localhost:5173',
-    'http://localhost:8080',
     'https://wallet-flow-control2.vercel.app',
-    'https://wallet-flow-control2-production.up.railway.app',
-    'http://localhost:32100/'
+    'http://localhost:5173',
+    'http://localhost:8080',
+    'http://localhost:32100'
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+};
+
+// Aplicar CORS antes de otras rutas
+app.use(cors(corsOptions));
+
+// Middleware para manejar OPTIONS requests
+app.options('*', cors(corsOptions));
 
 // Rate limiting
 const limiter = rateLimit({
