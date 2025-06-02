@@ -4,30 +4,32 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // Configuración de la conexión a MySQL Railway
-// Usar MYSQL_URL si está disponible (proporcionada por Railway con endpoint privado)
-const dbConfig = process.env.MYSQL_URL ? process.env.MYSQL_URL : {
-  host: process.env.DB_HOST || 'maglev.proxy.rlwy.net', // Fallback a endpoint público si no está MYSQL_URL y DB_HOST
-  port: parseInt(process.env.DB_PORT || '43682'), // Fallback a endpoint público si no está MYSQL_URL y DB_PORT
+const dbConfig = {
+  host: process.env.DB_HOST || 'yamanote.proxy.rlwy.net',
+  port: parseInt(process.env.DB_PORT || '41495'),
   user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '', // Es mejor no tener un default password hardcodeado
+  password: process.env.DB_PASSWORD || '',
   database: process.env.DB_NAME || 'moneytraker_db',
   ssl: {
     rejectUnauthorized: false
   },
-  connectTimeout: 60000,
-  acquireTimeout: 60000,
-  timeout: 60000,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
 };
 
 // Crear pool de conexiones
-export const pool = mysql.createPool(dbConfig as mysql.PoolOptions);
+export const pool = mysql.createPool(dbConfig);
 
 export const connectDatabase = async () => {
   try {
     console.log('🔄 Conectando a la base de datos MySQL...');
+    console.log('📝 Configuración de conexión:', {
+      host: dbConfig.host,
+      port: dbConfig.port,
+      database: dbConfig.database,
+      user: dbConfig.user
+    });
     
     // Verificar la conexión
     await pool.query('SELECT 1');
@@ -36,6 +38,11 @@ export const connectDatabase = async () => {
     
   } catch (error) {
     console.error('❌ Error conectando a la base de datos:', error);
+    console.error('🔍 Detalles del error:', {
+      code: error.code,
+      errno: error.errno,
+      sqlMessage: error.sqlMessage
+    });
     throw error;
   }
 };
